@@ -42,6 +42,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         material.diffuse.contents = UIImage(named: "art.scnassets/8k_moon.jpg")
         sphere.materials = [material]
         
+        
+        
         // Scene Nodes:- Points in 3-D space
         let node = SCNNode()
         node.position = SCNVector3(x: 0, y: 0.1, z: -0.5)
