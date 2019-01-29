@@ -11,8 +11,26 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    @IBAction func rollAgainButtonPressed(_ sender: UIBarButtonItem) {
+        
+        rotateAll()
+        
+    }
+    
+    @IBAction func removeAllButtonPressed(_ sender: UIBarButtonItem) {
+        
+        if !diceArray.isEmpty {
+            for dice in diceArray {
+                dice.removeFromParentNode()
+            }
+        }
+        
+    }
+    
+    
     @IBOutlet var sceneView: ARSCNView!
+    
+    var diceArray = [SCNNode]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,12 +110,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     
                     diceNode.position = SCNVector3(x: hitResult.worldTransform.columns.3.x, y: hitResult.worldTransform.columns.3.y + diceNode.boundingSphere.radius, z: hitResult.worldTransform.columns.3.z)
                     
+                    diceArray.append(diceNode)
+                    
                     sceneView.scene.rootNode.addChildNode(diceNode)
                     
-                    let randomX = Float(arc4random_uniform(4) + 1)*(Float.pi/2)
-                    let randomZ = Float(arc4random_uniform(4) + 1)*(Float.pi/2)
-                    
-                    diceNode.runAction(SCNAction.rotateBy(x: CGFloat(randomX * 5), y: 0, z: CGFloat(randomZ * 5), duration: 0.5))
+                   
                 }
             }
         }
@@ -129,4 +146,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
 
+    // MARK:- Rolling Functions
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        rotateAll()
+    }
+    
+    func rotateAll() {
+        if !diceArray.isEmpty {
+            for dice in diceArray {
+                roll(dice: dice)
+            }
+        }
+    }
+    
+    func roll(dice: SCNNode) {
+        let randomX = Float(arc4random_uniform(4) + 1)*(Float.pi/2)
+        let randomZ = Float(arc4random_uniform(4) + 1)*(Float.pi/2)
+        
+        dice.runAction(SCNAction.rotateBy(x: CGFloat(randomX * 5), y: 0, z: CGFloat(randomZ * 5), duration: 0.5))
+    }
+    
+
+    
 }
